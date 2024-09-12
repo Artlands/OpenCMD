@@ -9,7 +9,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'opencmd=opencmd.cmd:command_line',  # Replace with your function name
+            'opencmd=opencmd.cmd:command_line',
         ],
     },
     include_package_data=True,

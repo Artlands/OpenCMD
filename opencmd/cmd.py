@@ -26,25 +26,25 @@ def get_command_suggestions(user_description):
   system_role_content = f"""
   You are an expert in the {os.uname().sysname} operating system, running version {os.uname().version} on a {os.uname().machine} machine. Your role is to provide commands and explanations to help the user accomplish system-related tasks.
   Guidelines:
-	1.	Supported Commands: Provide commands for system management tasks (e.g., managing files, directories, processes, or system configurations).
+	1. Supported Commands: Provide commands for system management tasks (e.g., managing files, directories, processes, or system configurations).
 	a. If a request cannot be achieved via the command line or is not related to system management, return a boolean flag indicating “not supported.”
 	b. For example, requests like “tell me a joke” or “show me the weather” are not supported, but commands like “what time is it” are supported.
-	2.	Write Operations: For operations that modify the system (e.g., creating, deleting, or modifying files/folders, or changing a password), include a boolean flag to confirm the action in your response.
-	3.	Placeholders: If the command requires user-specific input (e.g., file names, folder paths), provide placeholders surrounded by < and >. In your response, include a list of placeholder names separated by | in the placeholder field.
+	2. Write Operations: For operations that modify the system (e.g., creating, deleting, or modifying files/folders, or changing a password), include a boolean flag to confirm the action in your response.
+	3. Placeholders: If the command requires user-specific input (e.g., file names, folder paths), provide placeholders surrounded by < and >. In your response, include a list of placeholder names separated by | in the placeholder field.
 	a. Example: If the user requests a command to create a folder but doesn’t specify a name, include a placeholder like <folder_name>, and the placeholder field would be folder_name.
-	4.	Human-readable Format: For requests related to file or folder sizes, always provide the information in human-readable format (e.g., using -h for size outputs).
+	4. Human-readable Format: For requests related to file or folder sizes, always provide the information in human-readable format (e.g., using -h for size outputs).
   """
   
   request = f"Suggest relevant command line commands with explanations regarding the request '{user_description}'."
   response = client.beta.chat.completions.parse(
     model=MODEL,
     messages=[
-        {"role": "system", 
-          "content": dedent(system_role_content)},
-        {
-            "role": "user",
-            "content": request
-        }
+      {"role": "system", 
+        "content": dedent(system_role_content)},
+      {
+          "role": "user",
+          "content": request
+      }
     ],
     response_format=CMDHelper,
   )
@@ -66,31 +66,31 @@ def execute_command(command):
         except FileNotFoundError:
           print(f"No such directory: {args[1]}")
       else:
-          # If 'cd' is called without arguments, change to the home directory
-          os.chdir(os.path.expanduser("~"))
-          print(f"Changed directory to {os.getcwd()}")
+        # If 'cd' is called without arguments, change to the home directory
+        os.chdir(os.path.expanduser("~"))
+        print(f"Changed directory to {os.getcwd()}")
     else:
       # Execute other commands normally
       result = subprocess.run(args, capture_output=True, text=True)
       # Print the result but do not include an empty line after the result
       print(result.stdout, end="")
       if result.returncode != 0:
-          print(f"Error: {result.stderr}", flush=True)
+        print(f"Error: {result.stderr}", flush=True)
   
   except Exception as e:
-      print(f"Failed to execute command: {e}")
+    print(f"Failed to execute command: {e}")
 
 def setup_readline_history():
-    """
-    Setup readline for command history, allowing navigation with arrow keys.
-    """
-    history_file = os.path.expanduser("~/.cmd_proxy_history")
-    try:
-      readline.read_history_file(history_file)
-    except FileNotFoundError:
-      # No previous history exists
-      pass
-    readline.set_history_length(1000)  # Set a limit for command history
+  """
+  Setup readline for command history, allowing navigation with arrow keys.
+  """
+  history_file = os.path.expanduser("~/.cmd_proxy_history")
+  try:
+    readline.read_history_file(history_file)
+  except FileNotFoundError:
+    # No previous history exists
+    pass
+  readline.set_history_length(1000)  # Set a limit for command history
 
 def save_readline_history():
   """
@@ -189,3 +189,4 @@ def command_line():
 
 if __name__ == "__main__":
   command_line()
+  
